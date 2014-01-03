@@ -63,6 +63,20 @@ class NCategories_model extends Base_module_model {
         return $values;
     }
 
+    function options_list($key = 'id', $val = 'name', $where = array(), $order = 'name') {
+        $CI = & get_instance();
+        if ($key == 'name') {
+            $key = $this->table_name . '.name';
+        }
+        if ($val == 'name') {
+            $val = 'name as name';
+        }
+
+
+        $return = parent::options_list($key, $val, $where, $order);
+        return $return;
+    }
+
 }
 
 class NCategory_model extends Data_record {

@@ -47,9 +47,9 @@ class customer_orders extends Fuel_base_controller {
     }
 
     function form_process($id = null) {
-
+        $this->load->model('Ncategories_model');
         $this->load->library('session');
-        $this->load->library('form_builder');
+        $this->load->library('saitex_form_builder');
         $this->load->helper('file');
 
         $this->session->set_flashdata('success', false);
@@ -59,55 +59,49 @@ class customer_orders extends Fuel_base_controller {
                 redirect(current_url());
             }
         }
-
+//        die();
 
         $fields = array();
-        $fields['email'] = array('required' => TRUE, 'label' => 'Email Address', 'class' => 'small');
-        $fields['email']['after_html'] = '<span id="email_check"></span>';
-        $fields['password'] = array('required' => TRUE, 'type' => 'password', 'class' => 'small');
-        $fields['password']['after_html'] = '<span id="pass_check">(6+ alpha/numeric characters)</span>';
-        $fields['confirm_password'] = array('required' => TRUE, 'type' => 'password', 'class' => 'small');
-        $fields['confirm_password']['after_html'] = '<span id="password_matched"></span>';
-        $fields['first_name'] = array('required' => TRUE, 'class' => 'small');
-        $fields['last_name'] = array('required' => TRUE, 'class' => 'small');
+        $fields['customer_name'] = array('required' => TRUE, 'label' => 'Customer Name', 'row_class' => 'create_a_customer');
+        $fields['category_id'] = array('required' => TRUE, 'label' => 'Category', 'row_class' => 'create_a_customer', 'value' => 'Selct Category', 'type' => 'select',
+            'options' => $this->Ncategories_model->options_list()
+        );
+        $fields['item_description'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Item Description', 'row_class' => 'create_a_customer');
+        $fields['quantity'] = array('required' => TRUE, 'label' => 'Quantity', 'row_class' => 'create_a_customer');
+        $fields['material_composition'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Material Composition', 'row_class' => 'create_a_customer');
+        $fields['material_weight'] = array('required' => TRUE, 'label' => 'Material Weight', 'row_class' => 'create_a_customer');
+        $fields['customization'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Customization', 'row_class' => 'create_a_customer');
+        $fields['messurment_chat'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Messurment Chat', 'row_class' => 'create_a_customer');
+//        $upload_path = assets_server_path('photographers/', 'images');
+//        $fields['item_picture'] = array('type' => 'file', 'accept' => 'gif,jpg,jpeg,png', 'upload_path' => $upload_path, 'overwrite' => FALSE,);
 
-        $fields['company'] = array('required' => false, 'class' => 'small');
-        $fields['street1'] = array('required' => TRUE, 'label' => 'Address', 'class' => 'small');
-        $fields['street2'] = array('required' => false, 'label' => 'Address 2', 'class' => 'small');
-//        $fields['country'] = array('required' => TRUE, 'value' => 'United States', 'class' => 'small', 'type' => 'select',
-//            'options' => $this->countries_model->options_list()
-//        );
+        $fields['item_picture'] = array('required' => TRUE, 'type' => 'file', 'label' => 'Item Picture:(if available)', 'row_class' => 'create_a_customer');
+        $fields['technical_files'] = array('required' => TRUE, 'type' => 'file', 'label' => 'Technical Files:(if available)', 'row_class' => 'create_a_customer');
+        $fields['logo_files'] = array('required' => TRUE, 'type' => 'file', 'label' => 'Logo Files:(if available)', 'row_class' => 'create_a_customer');
+        $fields['notes'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Notes', 'row_class' => 'create_a_customer');
+        $fields['price'] = array('required' => TRUE, 'label' => 'Price', 'row_class' => 'create_a_customer');
+        $fields['po_proforma_file'] = array('required' => TRUE, 'type' => 'file', 'label' => 'PO and Pro-form Attached Files ', 'row_class' => 'create_a_customer');
+        $fields['further_customer_file'] = array('required' => TRUE, 'type' => 'file', 'label' => 'Further Customer\'s Attached Files ', 'row_class' => 'create_a_customer');
+        $fields['link_production'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Link to the Production Monitoring System ', 'row_class' => 'create_a_customer');
+        $fields['lab_dip_delivery_term'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Lab-Dip Delivery Term', 'row_class' => 'create_a_customer');
+        $fields['pp_sample_delivery_term'] = array('label' => 'PP Sample Delivery Term ', 'type' => 'textarea', 'row_class' => 'create_a_customer', 'order' => 25);
+        $fields['tracking_number'] = array('required' => TRUE, 'label' => 'Customer Tracking no. & Courier & Pictures', 'type' => 'textarea', 'row_class' => 'create_a_customer');
+        $fields['office_update_parcel_receipt'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Office Update', 'row_class' => 'create_a_customer');
+        $fields['customer_update_parcel_receipt'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Customer\'s Details Update ', 'row_class' => 'create_a_customer');
+        $fields['shipping_agent'] = array('required' => TRUE, 'label' => 'Shipping Agent', 'type' => 'textarea', 'row_class' => 'create_a_customer', 'order' => 25);
+        $fields['payment_update_file'] = array('required' => TRUE, 'label' => 'Payment Update', 'type' => 'textarea', 'row_class' => 'create_a_customer', 'order' => 25);
 
-        $fields['state'] = array('required' => TRUE, 'class' => 'small', 'type' => 'select');
-        $fields['postalcode'] = array('required' => TRUE, 'label' => 'Zip/Post Code', 'class' => 'small');
-        $fields['city'] = array('required' => TRUE, 'class' => 'small');
-        $fields['phone'] = array('required' => TRUE, 'label' => 'Phone Number', 'class' => 'small');
-
-
-        $fields['mailing_list'] = array('required' => false, 'label' => 'Add to Mailing List', 'type' => 'checkbox', 'checked' => 'checked', 'value' => 'yes');
-        $fields['mailing_list']['after_html'] = '<span id="span_mailing_list">I would like to receive updates about new imagery, photographers and offers from mptv by email.</span>';
-        $fields['terms'] = array('required' => TRUE, 'value' => 'yes', 'label' => 'Terms/Conditions', 'type' => 'checkbox');
-        $fields['terms']['after_html'] = '<span id="terms_check">I accept the license(s) for the below items.</span>';
-
-        $string = read_file('./assets/terms/terms.txt');
-        $fields['terms_conditions_content'] = array('label' => '  ', 'disabled' => 'disabled', 'readonly' => 'readonly', 'type' => 'textarea', 'class' => 'trems_content', 'value' => $string, 'order' => 25);
-
-
-
-
-        $this->form_builder->set_fields($fields);
-
+        $this->saitex_form_builder->set_fields($fields);
+        $this->saitex_form_builder->css_class = 'search_box';
         // will set the values of the fields if there is an error... must be after set_fields
-        $this->form_builder->set_validator($this->validator);
-        $this->form_builder->set_field_values($_POST);
-        $this->form_builder->display_errors = TRUE;
-        $this->form_builder->form_attrs = 'method="post" action="" id="register"';
-        $vars['action'] = 'Register';
-        $this->form_builder->submit_value = ' ';
-        $this->form_builder->cancel_value = ' ';
-        $this->form_builder->show_required = false;
-        $this->form_builder->required_text = '<b>Login Info</b><span class="required">*</span>required fields';
-        $vars['form'] = $this->form_builder->render($fields, 'divs');
+        $this->saitex_form_builder->set_validator($this->validator);
+        $this->saitex_form_builder->set_field_values($_POST);
+        $this->saitex_form_builder->display_errors = TRUE;
+        $this->saitex_form_builder->form_attrs = 'method="post"';
+        $this->saitex_form_builder->show_required = true;
+        $this->saitex_form_builder->submit_value = 'Create Sample Shipping Out';
+        $this->saitex_form_builder->submit_name = 'submit';
+        $vars['form'] = $this->saitex_form_builder->render($fields, 'divs');
 
 
 
@@ -116,42 +110,30 @@ class customer_orders extends Fuel_base_controller {
 
     function _process($data) {
         $this->load->library('validator');
+//        print_r($data);
+//        die('d');
+//        $this->validator->add_rule('first_name', 'required', '', $this->input->post('first_name'));
+//        $this->validator->add_rule('first_name', 'required', '', $this->input->post('first_name'));
+//        $this->validator->add_rule('first_name', 'required', '', $this->input->post('first_name'));
+//        $this->validator->add_rule('first_name', 'required', '', $this->input->post('first_name'));
+//        $this->validator->add_rule('first_name', 'required', '', $this->input->post('first_name'));
+//        $this->validator->add_rule('first_name', 'required', '', $this->input->post('first_name'));
+//        $this->validator->add_rule('first_name', 'required', '', $this->input->post('first_name'));
+//        $this->validator->add_rule('first_name', 'required', '', $this->input->post('first_name'));
+//        $this->validator->add_rule('first_name', 'required', '', $this->input->post('first_name'));
 
-
-        $this->validator->add_rule('first_name', 'required', '', $this->input->post('first_name'));
-        $this->validator->add_rule('last_name', 'required', '', $this->input->post('last_name'));
-        $this->validator->add_rule('email', 'valid_email', '', $this->input->post('email'));
-        $this->validator->add_rule('street1', 'required', '', $this->input->post('street1'));
-        $this->validator->add_rule('city', 'required', '', $this->input->post('city'));
-        $this->validator->add_rule('email', 'valid_email', 'Please enter in a valid email', $this->input->post('email'));
-        $this->validator->add_rule('state', 'required', '', $this->input->post('state'));
-        $this->validator->add_rule('postalcode', 'required', '', $this->input->post('postalcode'));
-        $this->validator->add_rule('phone', 'required', '', $this->input->post('phone'));
-        $this->validator->add_rule('country', 'required', '', $this->input->post('country'));
-//        $this->validator->add_rule('terms', 'required', '', $this->input->post('terms'));
         if ($this->validator->validate()) {
-
-            if (!$this->users_model->record_exists(array('email' => $data['email']))) {
-                $data['user_name'] = $data['email'];
-                unset($data['street1'], $data['street2'], $data['country'], $data['state'], $data['postalcode'], $data['city']);
-                unset($data['confirm_password'], $data['terms_conditions_content'], $data['Register']);
-                foreach ($data as $key => $value) {
-                    if ($key == 'password') {
-                        $insert[$key] = sha1($value);
-                    } else
-                        $insert[$key] = $value;
-                }
-                $default_role = $this->config->item('default_role');
-                $default_role = $this->roles_model->get_role_id_by_name($default_role);
-                $default_role_id = $default_role->id;
-                $insert['role_id'] = $default_role_id;
-                $this->db->insert('fuel_users', $insert);
-
-                $id_user = $this->db->insert_id();
-                $this->logs_model->logit(lang('user_created'));
-                return TRUE;
+            unset($data['submit']);
+            if (empty($data['id']))
+                $this->customer_orders_model->insert($data);
+            else {
+                $whare = array('id' => $data['id']);
+                unset($data['id']);
+                $this->customer_orders_model->update($data, $whare);
             }
+            return TRUE;
         }
+        return TRUE;
     }
 
     function view($id = null) {
@@ -183,6 +165,11 @@ class customer_orders extends Fuel_base_controller {
 
         $this->customer_orders_model->delete($where);
         redirect('customer_orders');
+    }
+
+    public function logit($msg) {
+        $this->load->module_model(FUEL_FOLDER, 'fuel_logs_model');
+        $this->fuel_logs_model->logit($msg);
     }
 
 }
