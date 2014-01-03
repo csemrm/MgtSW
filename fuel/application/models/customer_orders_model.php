@@ -75,7 +75,7 @@ class customer_orders_model extends Base_module_model {
         return $record = parent::insert($values);
 
 //        die($record);
-//        return
+//        
     }
 
     public function update($values, $where) {

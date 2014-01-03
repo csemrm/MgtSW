@@ -13,8 +13,8 @@ class NCategories_model extends Base_module_model {
         parent::__construct('nrb_categories');
     }
 
-    function list_items($limit = NULL, $offset = NULL, $col = 'last_name', $order = 'asc') {
-
+    function list_items($limit = NULL, $offset = NULL, $col = 'name', $order = 'asc') {
+ 
         $this->db->select('id, name , is_active as Active ', FALSE);
         $data = parent::list_items($limit, $offset, $col, $order);
         foreach ($data as $key => $value) {
@@ -68,10 +68,7 @@ class NCategories_model extends Base_module_model {
         if ($key == 'name') {
             $key = $this->table_name . '.name';
         }
-        if ($val == 'name') {
-            $val = 'name as name';
-        }
-
+         
 
         $return = parent::options_list($key, $val, $where, $order);
         return $return;

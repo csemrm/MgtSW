@@ -52,14 +52,17 @@ class customer_orders extends Fuel_base_controller {
         $this->load->library('saitex_form_builder');
         $this->load->helper('file');
 
+
+
         $this->session->set_flashdata('success', false);
         if (!empty($_POST)) {
+
             if ($this->_process($_POST)) {
                 $this->session->set_flashdata('success', TRUE);
-                redirect(current_url());
+                redirect(redirect('customer_orders'));
             }
         }
-//        die();
+
 
         $fields = array();
         $fields['customer_name'] = array('required' => TRUE, 'label' => 'Customer Name', 'row_class' => 'create_a_customer');
@@ -72,9 +75,6 @@ class customer_orders extends Fuel_base_controller {
         $fields['material_weight'] = array('required' => TRUE, 'label' => 'Material Weight', 'row_class' => 'create_a_customer');
         $fields['customization'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Customization', 'row_class' => 'create_a_customer');
         $fields['messurment_chat'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Messurment Chat', 'row_class' => 'create_a_customer');
-//        $upload_path = assets_server_path('photographers/', 'images');
-//        $fields['item_picture'] = array('type' => 'file', 'accept' => 'gif,jpg,jpeg,png', 'upload_path' => $upload_path, 'overwrite' => FALSE,);
-
         $fields['item_picture'] = array('required' => TRUE, 'type' => 'file', 'label' => 'Item Picture:(if available)', 'row_class' => 'create_a_customer');
         $fields['technical_files'] = array('required' => TRUE, 'type' => 'file', 'label' => 'Technical Files:(if available)', 'row_class' => 'create_a_customer');
         $fields['logo_files'] = array('required' => TRUE, 'type' => 'file', 'label' => 'Logo Files:(if available)', 'row_class' => 'create_a_customer');
@@ -103,27 +103,34 @@ class customer_orders extends Fuel_base_controller {
         $this->saitex_form_builder->submit_name = 'submit';
         $vars['form'] = $this->saitex_form_builder->render($fields, 'divs');
 
-
-
         return $this->load->view('MGTSW/customer_orders/form', $vars, TRUE);
     }
 
     function _process($data) {
+        $assets_path = $this->config->item('assets_path');
+        $config['upload_path'] = '.' . $assets_path . 'uploads/';
+        $config['allowed_types'] = 'gif|jpg|png|pdf';
+        $config['max_size'] = '2048';
+        $config['max_width'] = '1024';
+        $config['max_height'] = '768';
+        $config['encrypt_name'] = TRUE;
+        print_r($config);
+        $this->load->library('upload', $config);
         $this->load->library('validator');
-//        print_r($data);
-//        die('d');
-//        $this->validator->add_rule('first_name', 'required', '', $this->input->post('first_name'));
-//        $this->validator->add_rule('first_name', 'required', '', $this->input->post('first_name'));
-//        $this->validator->add_rule('first_name', 'required', '', $this->input->post('first_name'));
-//        $this->validator->add_rule('first_name', 'required', '', $this->input->post('first_name'));
-//        $this->validator->add_rule('first_name', 'required', '', $this->input->post('first_name'));
-//        $this->validator->add_rule('first_name', 'required', '', $this->input->post('first_name'));
-//        $this->validator->add_rule('first_name', 'required', '', $this->input->post('first_name'));
-//        $this->validator->add_rule('first_name', 'required', '', $this->input->post('first_name'));
-//        $this->validator->add_rule('first_name', 'required', '', $this->input->post('first_name'));
 
         if ($this->validator->validate()) {
             unset($data['submit']);
+            foreach ($_FILES as $key => $value) {
+                if (!$this->upload->do_upload($key)) {
+                    $error = array('error' => $this->upload->display_errors());
+                    print_r($error);
+                    die();
+                    return FALSE;
+                } else {
+                    $upload_data = $this->upload->data();
+                    $data[$key] = $upload_data['file_name'];
+                }
+            }
             if (empty($data['id']))
                 $this->customer_orders_model->insert($data);
             else {
@@ -133,15 +140,23 @@ class customer_orders extends Fuel_base_controller {
             }
             return TRUE;
         }
-        return TRUE;
+        return FALSE;
     }
 
     function view($id = null) {
 
-        $data = array();
-
+        if (empty($id)) {
+            show_404();
+        }
+        $where = array();
+        $where['id'] = $id;
+        $customer_order = $this->customer_orders_model->find_one_array($where);
+        if (empty($customer_order['id'])) {
+            show_404();
+        }
+        $data['customer_order'] = $customer_order;
         $vars['assets_path'] = $this->config->item('assets_path');
-        $vars['body'] = $this->load->view('MGTSW/customer_orders/form', $data, true);
+        $vars['body'] = $this->load->view('MGTSW/customer_orders/view', $data, true);
 
 
         $this->load->view('MGTSW/MGTSW', $vars);

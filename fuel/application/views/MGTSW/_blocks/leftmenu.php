@@ -1,4 +1,3 @@
- 
 <ul>
     <li><a href="<?php echo site_url('') ?>">Customer Enquiry</a></li>
     <li><a href="<?php echo site_url('quotations') ?>">Customer Quotation</a></li>
