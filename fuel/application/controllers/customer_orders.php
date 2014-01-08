@@ -69,7 +69,7 @@ class customer_orders extends Fuel_base_controller {
         $fields['category_id'] = array('required' => TRUE, 'label' => 'Category', 'row_class' => 'create_a_customer', 'value' => 'Selct Category', 'type' => 'select',
             'options' => $this->Ncategories_model->options_list()
         );
-        $fields['item_description'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Item Description', 'row_class' => 'create_a_customer');
+        $fields['item_description'] = array('required' => TRUE, 'type' => 'wysiwyg', 'editor' => 'markitup', 'label' => 'Item Description', 'row_class' => 'create_a_customer');
         $fields['quantity'] = array('required' => TRUE, 'label' => 'Quantity', 'row_class' => 'create_a_customer');
         $fields['material_composition'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Material Composition', 'row_class' => 'create_a_customer');
         $fields['material_weight'] = array('required' => TRUE, 'label' => 'Material Weight', 'row_class' => 'create_a_customer');
@@ -108,7 +108,7 @@ class customer_orders extends Fuel_base_controller {
 
     function _process($data) {
         $assets_path = $this->config->item('assets_path');
-        $config['upload_path'] = '.' . $assets_path . 'uploads/';
+        $config['upload_path'] = './' . $assets_path . 'uploads/';
         $config['allowed_types'] = 'gif|jpg|png|pdf';
         $config['max_size'] = '2048';
         $config['max_width'] = '1024';

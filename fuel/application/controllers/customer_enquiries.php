@@ -2,12 +2,12 @@
 
 require_once(FUEL_PATH . '/libraries/Fuel_base_controller.php');
 
-class quotations extends Fuel_base_controller {
+class customer_enquiries extends Fuel_base_controller {
 
     function __construct() {
 
         parent::__construct();
-        $this->load->model('quotations_model');
+        $this->load->model('customer_enquiries_model');
         $this->load->module_model(FUEL_FOLDER, 'fuel_users_model');
     }
 
@@ -16,9 +16,9 @@ class quotations extends Fuel_base_controller {
         $data = array();
 
         $vars['assets_path'] = $this->config->item('assets_path');
-        $data['quotations'] = $this->quotations_model->list_items();
+        $data['customer_enquiries'] = $this->customer_enquiries_model->list_items();
 
-        $vars['body'] = $this->load->view('MGTSW/quotations/index', $data, true);
+        $vars['body'] = $this->load->view('MGTSW/customer_enquiries/index', $data, true);
 
 
         $this->load->view('MGTSW/MGTSW', $vars);
@@ -59,7 +59,7 @@ class quotations extends Fuel_base_controller {
 
             if ($this->_process($_POST)) {
                 $this->session->set_flashdata('success', TRUE);
-                redirect(redirect('quotations'));
+                redirect(redirect('customer_enquiries'));
             }
         }
 
@@ -103,7 +103,7 @@ class quotations extends Fuel_base_controller {
         $this->saitex_form_builder->submit_name = 'submit';
         $vars['form'] = $this->saitex_form_builder->render($fields, 'divs');
 
-        return $this->load->view('MGTSW/quotations/form', $vars, TRUE);
+        return $this->load->view('MGTSW/customer_enquiries/form', $vars, TRUE);
     }
 
     function _process($data) {
@@ -132,11 +132,11 @@ class quotations extends Fuel_base_controller {
                 }
             }
             if (empty($data['id']))
-                $this->quotations_model->insert($data);
+                $this->customer_enquiries_model->insert($data);
             else {
                 $whare = array('id' => $data['id']);
                 unset($data['id']);
-                $this->quotations_model->update($data, $whare);
+                $this->customer_enquiries_model->update($data, $whare);
             }
             return TRUE;
         }
@@ -150,13 +150,13 @@ class quotations extends Fuel_base_controller {
         }
         $where = array();
         $where['id'] = $id;
-        $customer_order = $this->quotations_model->find_one_array($where);
+        $customer_order = $this->customer_enquiries_model->find_one_array($where);
         if (empty($customer_order['id'])) {
             show_404();
         }
         $data['customer_order'] = $customer_order;
         $vars['assets_path'] = $this->config->item('assets_path');
-        $vars['body'] = $this->load->view('MGTSW/quotations/view', $data, true);
+        $vars['body'] = $this->load->view('MGTSW/customer_enquiries/view', $data, true);
 
 
         $this->load->view('MGTSW/MGTSW', $vars);
@@ -169,17 +169,17 @@ class quotations extends Fuel_base_controller {
         }
         $where = array();
         $where['id'] = $id;
-        $customer_order = $this->quotations_model->find_one($where);
+        $customer_order = $this->customer_enquiries_model->find_one($where);
         if (empty($customer_order->id)) {
             show_404();
         }
-        if (!$this->fuel->auth->has_permission('quotations_delete')) {
+        if (!$this->fuel->auth->has_permission('customer_enquiries_delete')) {
             show_error(lang('error_no_permissions'));
         }
 
 
-        $this->quotations_model->delete($where);
-        redirect('quotations');
+        $this->customer_enquiries_model->delete($where);
+        redirect('customer_enquiries');
     }
 
     public function logit($msg) {

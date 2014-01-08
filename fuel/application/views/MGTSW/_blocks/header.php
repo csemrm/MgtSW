@@ -39,7 +39,7 @@ if (empty($user_name))
 
             <header class="hader">
                 <div class="hader_text">
-                    <div class="hader_logo"><img src="<?php if (empty($assets_path)) $assets_path = '/assets/'; echo $assets_path; ?>images/logo.png" height="93" width="189" alt="logo" /></div>
+                    <div class="hader_logo"><img src="/<?php if (empty($assets_path)) $assets_path = 'assets/'; echo $assets_path; ?>images/logo.png" height="93" width="189" alt="logo" /></div>
                     <div class="right_text">
                         <strong>Hello <?php echo $user_name ?>   <a href="<?php echo site_url('fuel/logout') ?>">( Logout )</a></strong>
                         <p><?php echo english_date_verbose(datetime_now(false)); ?></p>
