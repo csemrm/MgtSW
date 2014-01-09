@@ -1,8 +1,10 @@
-<?php
+<div class="user_hader">Create A New Customer Quotation  </div>
 
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
+<div class="right_body_conten">
+
+    <div class="search_box"> 
+        <?php echo $form; ?> 
+    </div>
+
+</div>

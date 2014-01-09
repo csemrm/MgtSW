@@ -76,7 +76,7 @@ class customer_enquiries extends Fuel_base_controller {
             'options' => $this->Ncategories_model->options_list()
         );
         $fields['qty'] = array('required' => TRUE, 'label' => 'Quantity', 'row_class' => 'create_a_customer');
-        $fields['material_composition'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Material Composition', 'row_class' => 'create_a_customer');
+        $fields['material_composition'] =  array('type' => 'textarea', 'cols' => 40, 'rows' => 5, 'class' => 'wysiwyg');//array('required' => TRUE, 'type' => 'textarea', 'label' => 'Material Composition', 'row_class' => 'create_a_customer');
         $fields['item_description'] = array('required' => TRUE, 'type' => 'textarea', 'editor' => 'markitup', 'label' => 'Item Description', 'row_class' => 'create_a_customer');
         $fields['material_weight'] = array('required' => TRUE, 'label' => 'Material Weight', 'row_class' => 'create_a_customer');
         $fields['customization'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Customization', 'row_class' => 'create_a_customer');
