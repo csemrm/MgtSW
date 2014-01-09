@@ -37,11 +37,10 @@ class po_factories extends Fuel_base_controller {
 
     function edit($id = null) {
 
-        $data = array();
+        $vars = array();
 
         $vars['assets_path'] = $this->config->item('assets_path');
-//        $vars['body'] = $this->form_process($id);
-
+        $vars['body'] = $this->form_process($id);
 
         $this->load->view('MGTSW/MGTSW', $vars);
     }
@@ -52,12 +51,14 @@ class po_factories extends Fuel_base_controller {
         $this->load->library('saitex_form_builder');
         $this->load->helper('file');
 
-
+        if (!empty($id)) {
+            $saved = $this->po_factories_model->find_one_array(array('id' => $id));
+            if (empty($saved))
+                show_404();
+        }
 
         $this->session->set_flashdata('success', false);
         if (!empty($_POST)) {
-
-            print_r($_POST);
 
             if ($this->_process($_POST)) {
                 $this->session->set_flashdata('success', TRUE);
@@ -87,18 +88,28 @@ class po_factories extends Fuel_base_controller {
         $fields['lab_dip_delivery_term'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Lab-Dip Delivery Term', 'row_class' => 'create_a_customer');
         $fields['pp_sample_delivery_term'] = array('label' => 'PP Sample Delivery Term ', 'type' => 'textarea', 'row_class' => 'create_a_customer', 'order' => 25);
         $fields['shipping_agent'] = array('required' => TRUE, 'label' => 'Shipping Agent', 'type' => 'wysiwyg', 'row_class' => 'create_a_customer', 'order' => 25);
-
+        if (!empty($id))
+            $fields['id'] = array('required' => TRUE, 'type' => 'hidden');
         $this->saitex_form_builder->set_fields($fields);
         $this->saitex_form_builder->css_class = 'search_box';
         // will set the values of the fields if there is an error... must be after set_fields
         $this->saitex_form_builder->set_validator($this->validator);
-        $this->saitex_form_builder->set_field_values($_POST);
+        if (!empty($_POST)) {
+            $val = $_POST;
+        } else
+        if (!empty($id)) {
+            $val = $saved;
+        } else {
+            $val = array();
+        }
+        $this->saitex_form_builder->set_field_values($val);
+//        $this->saitex_form_builder->set_field_values($_POST);
         $this->saitex_form_builder->display_errors = TRUE;
         $this->saitex_form_builder->form_attrs = 'method="post"';
         $this->saitex_form_builder->show_required = true;
         $this->saitex_form_builder->submit_value = 'Create Sample Shipping Out';
         $this->saitex_form_builder->submit_name = 'submit';
-        $vars['form'] = $this->saitex_form_builder->render($fields, 'divs');
+        $vars['form'] = $this->saitex_form_builder->render(null, 'divs');
 
         return $this->load->view('MGTSW/po_factories/form', $vars, TRUE);
     }
@@ -117,7 +128,7 @@ class po_factories extends Fuel_base_controller {
 
         if ($this->validator->validate()) {
             unset($data['submit']);
-          
+
             if (!empty($_FILES)) {
                 foreach ($_FILES as $key => $value) {
                     if ($value['name']) {
@@ -132,9 +143,9 @@ class po_factories extends Fuel_base_controller {
                     }
                 }
             }
-            
- 
-          
+
+
+
             if (empty($data['id']))
                 $this->po_factories_model->insert($data);
             else {
