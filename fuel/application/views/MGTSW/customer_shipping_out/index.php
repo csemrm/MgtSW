@@ -1,5 +1,5 @@
 
-<div class = "user_hader">Customer PO For Factory </div>
+<div class = "user_hader">Customer Order Shipping Out </div>
 <div class = "new_user"><a href = "<?php echo site_url('po_factories/add') ?>">Create A New Customer PO For Factory  </a></div>
 
 <div class = "new_user2">

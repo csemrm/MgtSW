@@ -1,4 +1,4 @@
-<div class="user_hader">Create New Customer Enquiry </div>
+<div class="user_hader">Create Customer Sample Shipping Out  </div>
 
 
 <div class="right_body_conten">

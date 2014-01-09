@@ -1,5 +1,5 @@
-<div class="user_hader">Customer Enquiry </div>
-<div class="new_user"><a href="<?php echo site_url('customer_enquiries/add') ?>">Create A New Customer Enquiry </a></div>
+<div class="user_hader">Customer Sample Request </div>
+<div class="new_user"><a href="<?php echo site_url('sample_requests/add') ?>">Create A New Customer Sample Request </a></div>
 
 <div class="new_user2">
     <ul>
@@ -25,14 +25,14 @@
     <div class="status">Last Updated</div>
     <div class="status">Action</div>
 
-    <?php foreach ($customer_enquiries as $key => $customer_enquiry): ?>
+    <?php foreach ($sample_requests as $key => $sample_request): ?>
 
 
-        <div class="name_text_here"><?php echo $customer_enquiry['ticket_number'] ?><a href="<?php echo site_url('customer_enquiries/view/' . $customer_enquiry['id']) ?>">View</a></div>
-        <div class="email_text_here"><?php echo $customer_enquiry['qty'] ?></div>
-        <div class="enabled"><?php echo $customer_enquiry['notes'] ?></div>
-        <div class="enabled"><?php echo english_date_verbose($customer_enquiry['updated_at']) ?></div>
-        <div class="enabled"><a class="update"href="<?php echo site_url('customer_enquiries/edit/' . $customer_enquiry['id']) ?>">Update</a> | <a class="remove" href="<?php echo site_url('customer_enquiries/remove/' . $customer_enquiry['id']) ?>">Remove</a></div>
+        <div class="name_text_here"><?php echo $sample_request['ticket_number'] ?><a href="<?php echo site_url('sample_requests/view/' . $sample_request['id']) ?>">View</a></div>
+        <div class="email_text_here"><?php echo $sample_request['qty'] ?></div>
+        <div class="enabled"><?php echo $sample_request['notes'] ?></div>
+        <div class="enabled"><?php echo english_date_verbose($sample_request['updated_at']) ?></div>
+        <div class="enabled"><a class="update"href="<?php echo site_url('sample_requests/edit/' . $sample_request['id']) ?>">Update</a> | <a class="remove" href="<?php echo site_url('sample_requests/remove/' . $sample_request['id']) ?>">Remove</a></div>
 
 
 

@@ -1,5 +1,4 @@
 <?php
-
 if (empty($user_name))
     $user_name = 'Guest';
 ?>
@@ -29,7 +28,11 @@ if (empty($user_name))
               <?php
               echo css('mgtsw/css/style') . css($css);
               ?>
-<script type="text/javascript" src="/fuel/modules/fuel/assets/js/jquery/jquery.js"></script>	
+        <script type="text/javascript" src="/fuel/modules/fuel/assets/js/jquery/jquery.js"></script>	
+
+    <head>
+
+         
     </head>
     <body class="body_bg2">
 

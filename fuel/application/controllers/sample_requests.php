@@ -40,7 +40,7 @@ class sample_requests extends Fuel_base_controller {
         $data = array();
 
         $vars['assets_path'] = $this->config->item('assets_path');
-//        $vars['body'] = $this->form_process($id);
+        $vars['body'] = $this->form_process($id);
 
 
         $this->load->view('MGTSW/MGTSW', $vars);
@@ -53,6 +53,12 @@ class sample_requests extends Fuel_base_controller {
         $this->load->helper('file');
 
 
+        $this->saitex_form_builder->load_custom_fields(APPPATH . 'config/custom_fields.php');
+        if (!empty($id)) {
+            $saved = $this->quotations_model->find_one_array(array('id' => $id));
+            if (empty($saved))
+                show_404();
+        }
 
         $this->session->set_flashdata('success', false);
         if (!empty($_POST)) {
@@ -90,18 +96,27 @@ class sample_requests extends Fuel_base_controller {
         $fields['customer_update_parcel_receipt'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Customer\'s Details Update ', 'row_class' => 'create_a_customer');
         $fields['shipping_agent'] = array('required' => TRUE, 'label' => 'Shipping Agent', 'type' => 'textarea', 'row_class' => 'create_a_customer', 'order' => 25);
         $fields['payment_update_file'] = array('required' => TRUE, 'label' => 'Payment Update', 'type' => 'textarea', 'row_class' => 'create_a_customer', 'order' => 25);
-
+        if (!empty($id))
+            $fields['id'] = array('required' => TRUE, 'type' => 'hidden');
         $this->saitex_form_builder->set_fields($fields);
         $this->saitex_form_builder->css_class = 'search_box';
         // will set the values of the fields if there is an error... must be after set_fields
         $this->saitex_form_builder->set_validator($this->validator);
-        $this->saitex_form_builder->set_field_values($_POST);
+        if (!empty($_POST)) {
+            $val = $_POST;
+        } else
+        if (!empty($id)) {
+            $val = $saved;
+        } else {
+            $val = array();
+        }
+        $this->saitex_form_builder->set_field_values($val);
         $this->saitex_form_builder->display_errors = TRUE;
         $this->saitex_form_builder->form_attrs = 'method="post"';
         $this->saitex_form_builder->show_required = true;
-        $this->saitex_form_builder->submit_value = 'Create Sample Shipping Out';
+        $this->saitex_form_builder->submit_value = 'Create Sample Request';
         $this->saitex_form_builder->submit_name = 'submit';
-        $vars['form'] = $this->saitex_form_builder->render($fields, 'divs');
+        $vars['form'] = $this->saitex_form_builder->render(null, 'divs');
 
         return $this->load->view('MGTSW/sample_requests/form', $vars, TRUE);
     }

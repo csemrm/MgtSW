@@ -1,6 +1,6 @@
 
-<div class = "user_hader">Customer PO For Factory </div>
-<div class = "new_user"><a href = "<?php echo site_url('customer_shipping_out/add') ?>">Create A New Customer PO For Factory  </a></div>
+<div class = "user_hader">Customer Order </div>
+<div class = "new_user"><a href = "<?php echo site_url('customer_orders/add') ?>">Create A New Customer Order   </a></div>
 
 <div class = "new_user2">
     <ul>
@@ -26,14 +26,14 @@
     <div class="status">Last Updated</div>
     <div class="status">Action</div>
 
-    <?php foreach ($po_factories as $key => $customer_shipping_out): ?>
+    <?php foreach ($customer_orders as $key => $customer_order): ?>
 
 
-        <div class="name_text_here"><?php echo $customer_shipping_out['customer_name'] ?><a href="<?php echo site_url('customer_shipping_out/view/' . $customer_shipping_out['id']) ?>">View</a></div>
-        <div class="email_text_here"><?php echo $customer_shipping_out['quantity'] ?></div>
-        <div class="enabled"><?php echo $customer_shipping_out['notes'] ?></div>
-        <div class="enabled"><?php echo english_date_verbose($customer_shipping_out['updated_at']) ?></div>
-        <div class="enabled"><a class="update"href="<?php echo site_url('customer_shipping_out/edit/' . $customer_shipping_out['id']) ?>">Update</a> | <a class="remove" href="<?php echo site_url('customer_shipping_out/remove/' . $customer_shipping_out['id']) ?>">Remove</a></div>
+        <div class="name_text_here"><?php echo $customer_order['customer_name'] ?><a href="<?php echo site_url('customer_orders/view/' . $customer_order['id']) ?>">View</a></div>
+        <div class="email_text_here"><?php echo $customer_order['quantity'] ?></div>
+        <div class="enabled"><?php echo $customer_order['notes'] ?></div>
+        <div class="enabled"><?php echo english_date_verbose($customer_order['updated_at']) ?></div>
+        <div class="enabled"><a class="update"href="<?php echo site_url('customer_orders/edit/' . $customer_order['id']) ?>">Update</a> | <a class="remove" href="<?php echo site_url('customer_orders/remove/' . $customer_order['id']) ?>">Remove</a></div>
 
 
 
