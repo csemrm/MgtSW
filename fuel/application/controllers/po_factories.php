@@ -154,11 +154,11 @@ class po_factories extends Fuel_base_controller {
         }
         $where = array();
         $where['id'] = $id;
-        $customer_order = $this->po_factories_model->find_one_array($where);
-        if (empty($customer_order['id'])) {
+        $po_factories = $this->po_factories_model->find_one_array($where);
+        if (empty($po_factories['id'])) {
             show_404();
         }
-        $data['customer_order'] = $customer_order;
+        $data['po_factories'] = $po_factories;
         $vars['assets_path'] = $this->config->item('assets_path');
         $vars['body'] = $this->load->view('MGTSW/po_factories/view', $data, true);
 
@@ -173,8 +173,8 @@ class po_factories extends Fuel_base_controller {
         }
         $where = array();
         $where['id'] = $id;
-        $customer_order = $this->po_factories_model->find_one($where);
-        if (empty($customer_order->id)) {
+        $po_factories = $this->po_factories_model->find_one($where);
+        if (empty($po_factories->id)) {
             show_404();
         }
         if (!$this->fuel->auth->has_permission('po_factories_delete')) {

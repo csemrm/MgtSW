@@ -26,7 +26,7 @@ class order_shipping_outs extends Fuel_base_controller {
 
     function add() {
 
-        $data = array();
+        $vars = array();
 
         $vars['assets_path'] = $this->config->item('assets_path');
         $vars['body'] = $this->form_process();
@@ -64,33 +64,22 @@ class order_shipping_outs extends Fuel_base_controller {
         }
 
 
-        $fields = array();
+       $fields = array();
         $fields['customer_name'] = array('required' => TRUE, 'label' => 'Customer Name', 'row_class' => 'create_a_customer');
-        $fields['category_id'] = array('required' => TRUE, 'label' => 'Category', 'row_class' => 'create_a_customer', 'value' => 'Selct Category', 'type' => 'select',
-            'options' => $this->Ncategories_model->options_list()
+        $fields['po_pro_ref'] = array('required' => TRUE, 'label' => 'PO and Pro-Form Nr. Reference', 'row_class' => 'create_a_customer');
+        $fields['item_description'] = array('required' => TRUE, 'type' => 'textarea','label' => 'Item Description:', 'row_class' => 'create_a_customer'
+            
         );
-        $fields['item_description'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Item Description', 'row_class' => 'create_a_customer');
         $fields['quantity'] = array('required' => TRUE, 'label' => 'Quantity', 'row_class' => 'create_a_customer');
-        $fields['material_composition'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Material Composition', 'row_class' => 'create_a_customer');
-        $fields['material_weight'] = array('required' => TRUE, 'label' => 'Material Weight', 'row_class' => 'create_a_customer');
-        $fields['customization'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Customization', 'row_class' => 'create_a_customer');
-        $fields['messurment_chat'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Messurment Chat', 'row_class' => 'create_a_customer');
-        $fields['item_picture'] = array('required' => TRUE, 'type' => 'file', 'label' => 'Item Picture:(if available)', 'row_class' => 'create_a_customer');
-        $fields['technical_files'] = array('required' => TRUE, 'type' => 'file', 'label' => 'Technical Files:(if available)', 'row_class' => 'create_a_customer');
-        $fields['logo_files'] = array('required' => TRUE, 'type' => 'file', 'label' => 'Logo Files:(if available)', 'row_class' => 'create_a_customer');
-        $fields['notes'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Notes', 'row_class' => 'create_a_customer');
-        $fields['price'] = array('required' => TRUE, 'label' => 'Price', 'row_class' => 'create_a_customer');
-        $fields['po_proforma_file'] = array('required' => TRUE, 'type' => 'file', 'label' => 'PO and Pro-form Attached Files ', 'row_class' => 'create_a_customer');
-        $fields['further_customer_file'] = array('required' => TRUE, 'type' => 'file', 'label' => 'Further Customer\'s Attached Files ', 'row_class' => 'create_a_customer');
-        $fields['link_production'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Link to the Production Monitoring System ', 'row_class' => 'create_a_customer');
-        $fields['lab_dip_delivery_term'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Lab-Dip Delivery Term', 'row_class' => 'create_a_customer');
-        $fields['pp_sample_delivery_term'] = array('label' => 'PP Sample Delivery Term ', 'type' => 'textarea', 'row_class' => 'create_a_customer', 'order' => 25);
-        $fields['tracking_number'] = array('required' => TRUE, 'label' => 'Customer Tracking no. & Courier & Pictures', 'type' => 'textarea', 'row_class' => 'create_a_customer');
-        $fields['office_update_parcel_receipt'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Office Update', 'row_class' => 'create_a_customer');
-        $fields['customer_update_parcel_receipt'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Customer\'s Details Update ', 'row_class' => 'create_a_customer');
-        $fields['shipping_agent'] = array('required' => TRUE, 'label' => 'Shipping Agent', 'type' => 'textarea', 'row_class' => 'create_a_customer', 'order' => 25);
-        $fields['payment_update_file'] = array('required' => TRUE, 'label' => 'Payment Update', 'type' => 'textarea', 'row_class' => 'create_a_customer', 'order' => 25);
 
+        $fields['order_delivary'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Order Delivery', 'row_class' => 'create_a_customer');
+        $fields['notes'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Notes', 'row_class' => 'create_a_customer');
+        $fields['pro_form_attached_files'] = array('required' => TRUE, 'label' => 'PO and Pro-form Attached Files', 'row_class' => 'create_a_customer');
+        $fields['documents_copies'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Documents copies(dummy)', 'row_class' => 'create_a_customer');
+        $fields['original_document'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Original Documents', 'row_class' => 'create_a_customer');
+        $fields['air_booking'] = array('required' => false, 'type' => 'file', 'label' => 'Vessel/Air booking, Schedule and Documents', 'row_class' => 'create_a_customer');
+        $fields['courier'] = array('required' => false, 'type' => 'file', 'label' => 'Customer Tracking no. & Courier', 'row_class' => 'create_a_customer');
+        $fields['note_cnform_goods'] = array('required' => false, 'type' => 'file', 'label' => 'Note(to confirm the arrival of goods)', 'row_class' => 'create_a_customer');
         $this->saitex_form_builder->set_fields($fields);
         $this->saitex_form_builder->css_class = 'search_box';
         // will set the values of the fields if there is an error... must be after set_fields
@@ -101,7 +90,7 @@ class order_shipping_outs extends Fuel_base_controller {
         $this->saitex_form_builder->show_required = true;
         $this->saitex_form_builder->submit_value = 'Create Sample Shipping Out';
         $this->saitex_form_builder->submit_name = 'submit';
-        $vars['form'] = $this->saitex_form_builder->render($fields, 'divs');
+        $vars['form'] = $this->saitex_form_builder->render(null, 'divs');
 
         return $this->load->view('MGTSW/order_shipping_outs/form', $vars, TRUE);
     }
@@ -114,13 +103,14 @@ class order_shipping_outs extends Fuel_base_controller {
         $config['max_width'] = '1024';
         $config['max_height'] = '768';
         $config['encrypt_name'] = TRUE;
-        print_r($config);
+
         $this->load->library('upload', $config);
         $this->load->library('validator');
 
         if ($this->validator->validate()) {
             unset($data['submit']);
             foreach ($_FILES as $key => $value) {
+                if($value['name']){
                 if (!$this->upload->do_upload($key)) {
                     $error = array('error' => $this->upload->display_errors());
                     print_r($error);
@@ -130,6 +120,7 @@ class order_shipping_outs extends Fuel_base_controller {
                     $upload_data = $this->upload->data();
                     $data[$key] = $upload_data['file_name'];
                 }
+            }
             }
             if (empty($data['id']))
                 $this->order_shipping_outs_model->insert($data);
