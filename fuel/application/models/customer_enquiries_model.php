@@ -10,7 +10,7 @@ class customer_enquiries_model extends Base_module_model {
         parent::__construct('nrb_customer_enquiries');
     }
 
-    function list_items($limit = NULL, $offset = NULL, $col = 'customer_name', $order = 'asc') {
+    function list_items($limit = NULL, $offset = NULL, $col = 'ticket_number', $order = 'asc') {
 
         $this->db->select('* , is_active as Active ', FALSE);
         $data = parent::list_items($limit, $offset, $col, $order);
