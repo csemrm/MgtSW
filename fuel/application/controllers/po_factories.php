@@ -57,39 +57,36 @@ class po_factories extends Fuel_base_controller {
         $this->session->set_flashdata('success', false);
         if (!empty($_POST)) {
 
+            print_r($_POST);
+
             if ($this->_process($_POST)) {
                 $this->session->set_flashdata('success', TRUE);
-                redirect(redirect('po_factories'));
+                redirect('po_factories');
             }
         }
 
 
         $fields = array();
-        $fields['customer_name'] = array('required' => TRUE, 'label' => 'Customer Name', 'row_class' => 'create_a_customer');
+        $fields['order_number'] = array('required' => TRUE, 'label' => 'Order Number and ID', 'row_class' => 'create_a_customer');
+        $fields['customer_code'] = array('required' => TRUE, 'label' => 'Customer Code', 'row_class' => 'create_a_customer');
         $fields['category_id'] = array('required' => TRUE, 'label' => 'Category', 'row_class' => 'create_a_customer', 'value' => 'Selct Category', 'type' => 'select',
             'options' => $this->Ncategories_model->options_list()
         );
-        $fields['item_description'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Item Description', 'row_class' => 'create_a_customer');
         $fields['quantity'] = array('required' => TRUE, 'label' => 'Quantity', 'row_class' => 'create_a_customer');
+
         $fields['material_composition'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Material Composition', 'row_class' => 'create_a_customer');
+        $fields['item_description'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Item Description', 'row_class' => 'create_a_customer');
         $fields['material_weight'] = array('required' => TRUE, 'label' => 'Material Weight', 'row_class' => 'create_a_customer');
         $fields['customization'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Customization', 'row_class' => 'create_a_customer');
         $fields['messurment_chat'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Messurment Chat', 'row_class' => 'create_a_customer');
-        $fields['item_picture'] = array('required' => TRUE, 'type' => 'file', 'label' => 'Item Picture:(if available)', 'row_class' => 'create_a_customer');
-        $fields['technical_files'] = array('required' => TRUE, 'type' => 'file', 'label' => 'Technical Files:(if available)', 'row_class' => 'create_a_customer');
-        $fields['logo_files'] = array('required' => TRUE, 'type' => 'file', 'label' => 'Logo Files:(if available)', 'row_class' => 'create_a_customer');
+        $fields['item_picture'] = array('required' => false, 'type' => 'file', 'label' => 'Item Picture:(if available)', 'row_class' => 'create_a_customer');
+        $fields['technical_files'] = array('required' => false, 'type' => 'file', 'label' => 'Technical Files:(if available)', 'row_class' => 'create_a_customer');
+        $fields['logo_files'] = array('required' => false, 'type' => 'file', 'label' => 'Logo Files:(if available)', 'row_class' => 'create_a_customer');
         $fields['notes'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Notes', 'row_class' => 'create_a_customer');
         $fields['price'] = array('required' => TRUE, 'label' => 'Price', 'row_class' => 'create_a_customer');
-        $fields['po_proforma_file'] = array('required' => TRUE, 'type' => 'file', 'label' => 'PO and Pro-form Attached Files ', 'row_class' => 'create_a_customer');
-        $fields['further_customer_file'] = array('required' => TRUE, 'type' => 'file', 'label' => 'Further Customer\'s Attached Files ', 'row_class' => 'create_a_customer');
-        $fields['link_production'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Link to the Production Monitoring System ', 'row_class' => 'create_a_customer');
         $fields['lab_dip_delivery_term'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Lab-Dip Delivery Term', 'row_class' => 'create_a_customer');
         $fields['pp_sample_delivery_term'] = array('label' => 'PP Sample Delivery Term ', 'type' => 'textarea', 'row_class' => 'create_a_customer', 'order' => 25);
-        $fields['tracking_number'] = array('required' => TRUE, 'label' => 'Customer Tracking no. & Courier & Pictures', 'type' => 'textarea', 'row_class' => 'create_a_customer');
-        $fields['office_update_parcel_receipt'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Office Update', 'row_class' => 'create_a_customer');
-        $fields['customer_update_parcel_receipt'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Customer\'s Details Update ', 'row_class' => 'create_a_customer');
-        $fields['shipping_agent'] = array('required' => TRUE, 'label' => 'Shipping Agent', 'type' => 'textarea', 'row_class' => 'create_a_customer', 'order' => 25);
-        $fields['payment_update_file'] = array('required' => TRUE, 'label' => 'Payment Update', 'type' => 'textarea', 'row_class' => 'create_a_customer', 'order' => 25);
+        $fields['shipping_agent'] = array('required' => TRUE, 'label' => 'Shipping Agent', 'type' => 'wysiwyg', 'row_class' => 'create_a_customer', 'order' => 25);
 
         $this->saitex_form_builder->set_fields($fields);
         $this->saitex_form_builder->css_class = 'search_box';
@@ -108,7 +105,7 @@ class po_factories extends Fuel_base_controller {
 
     function _process($data) {
         $assets_path = $this->config->item('assets_path');
-        $config['upload_path'] = './' . $assets_path . 'uploads/';
+        $config['upload_path'] = './' . $assets_path . 'uploads/po_factories/';
         $config['allowed_types'] = 'gif|jpg|png|pdf';
         $config['max_size'] = '2048';
         $config['max_width'] = '1024';
@@ -120,17 +117,24 @@ class po_factories extends Fuel_base_controller {
 
         if ($this->validator->validate()) {
             unset($data['submit']);
-            foreach ($_FILES as $key => $value) {
-                if (!$this->upload->do_upload($key)) {
-                    $error = array('error' => $this->upload->display_errors());
-                    print_r($error);
-                    die();
-                    return FALSE;
-                } else {
-                    $upload_data = $this->upload->data();
-                    $data[$key] = $upload_data['file_name'];
+          
+            if (!empty($_FILES)) {
+                foreach ($_FILES as $key => $value) {
+                    if ($value['name']) {
+                        if (!$this->upload->do_upload($key)) {
+                            $error = array('error' => $this->upload->display_errors());
+
+                            return FALSE;
+                        } else {
+                            $upload_data = $this->upload->data();
+                            $data[$key] = $upload_data['file_name'];
+                        }
+                    }
                 }
             }
+            
+ 
+          
             if (empty($data['id']))
                 $this->po_factories_model->insert($data);
             else {

@@ -208,6 +208,16 @@
     display:inline;
     padding:3px;	
 }
+.new_user2 input[type="submit"] {
+    background: none repeat scroll 0 0 #EC6108;
+    border: 1px solid #EC6108;
+    color: #FFFFFF;
+    cursor: pointer;
+    font-weight: bold;
+    height: auto;
+    vertical-align: middle;
+    width: auto;
+}
 .showing{
     padding-left:34px;
     font-size:14px;
