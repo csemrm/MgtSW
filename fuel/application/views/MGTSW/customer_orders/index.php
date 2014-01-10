@@ -1,4 +1,7 @@
-
+<?php 
+$CI = & get_instance();
+$CI->load->library('fuel_auth'); 
+?>
 <div class = "user_hader">Customer Order </div>
 <div class = "new_user"><a href = "<?php echo site_url('customer_orders/add') ?>">Create A New Customer Order   </a></div>
 
@@ -33,11 +36,13 @@
         <div class="email_text_here"><?php echo $customer_order['quantity'] ?></div>
         <div class="enabled"><?php echo $customer_order['notes'] ?></div>
         <div class="enabled"><?php echo english_date_verbose($customer_order['updated_at']) ?></div>
-        <div class="enabled"><a class="update"href="<?php echo site_url('customer_orders/edit/' . $customer_order['id']) ?>">Update</a> | <a class="remove" href="<?php echo site_url('customer_orders/remove/' . $customer_order['id']) ?>">Remove</a></div>
-
-
-
-
+        <div class="enabled">
+            <?php if ($CI->fuel_auth->has_permission('customer_orders/edit')) { ?>
+                <a class="update"href="<?php echo site_url('customer_orders/edit/' . $customer_order['id']) ?>">Update</a> | 
+                <?php } if ($CI->fuel_auth->has_permission('customer_orders/remove')) { ?>
+                <a class="remove" href="<?php echo site_url('customer_orders/remove/' . $customer_order['id']) ?>">Remove</a>
+            <?php } ?>
+        </div>
     <?php endforeach; ?>
 
 

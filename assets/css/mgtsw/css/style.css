@@ -549,3 +549,23 @@ label:after {
     text-align: center;
     width: 10px;
 }
+/****************View*/
+.create_a_customer2{
+    overflow:hidden;
+    border-bottom:solid 1px #ccc;
+    color:#333;
+    font-size:14px;
+    background:#EEEEEE;
+    padding:10px;
+    margin-top:1px;
+}
+.view_page_left{
+    float:left;
+    width:200px;
+    color:#0171a3;
+}
+.view_page_right{
+    float:left;
+    width:400px; 
+}
+/****************View*/

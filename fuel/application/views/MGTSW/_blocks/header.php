@@ -1,6 +1,17 @@
 <?php
 if (empty($user_name))
     $user_name = 'Guest';
+
+$CI = & get_instance();
+$CI->load->library('fuel_auth');
+$usr = $CI->fuel_auth->is_logged_in();
+
+if (!$usr) {
+    redirect(site_url('fuel/login'));
+} else {
+    $user = $CI->fuel_auth->user_data();
+    $user_name = $user['user_name'];
+}
 ?>
 
 <!DOCTYPE html>
@@ -32,7 +43,7 @@ if (empty($user_name))
 
     <head>
 
-         
+
     </head>
     <body class="body_bg2">
 

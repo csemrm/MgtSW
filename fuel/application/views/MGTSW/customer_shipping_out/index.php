@@ -33,10 +33,13 @@
         <div class="email_text_here"><?php echo $po_factory['shipping_agent'] ?></div>
         <div class="enabled"><?php echo $po_factory['notes'] ?></div>
         <div class="enabled"><?php echo english_date_verbose($po_factory['updated_at']) ?></div>
-        <div class="enabled"><a class="update"href="<?php echo site_url('po_factories/edit/' . $po_factory['id']) ?>">Update</a> | <a class="remove" href="<?php echo site_url('po_factories/remove/' . $po_factory['id']) ?>">Remove</a></div>
-
-
-
+      <div class="enabled">
+            <?php if ($CI->fuel_auth->has_permission('customer_enquiries/edit')) { ?>
+                <a class="update"href="<?php echo site_url('customer_enquiries/edit/' . $po_factory['id']) ?>">Update</a> | 
+                <?php } if ($CI->fuel_auth->has_permission('customer_enquiries/remove')) { ?>
+                <a class="remove" href="<?php echo site_url('customer_enquiries/remove/' . $po_factory['id']) ?>">Remove</a>
+            <?php } ?>
+        </div>
 
     <?php endforeach; ?>
 

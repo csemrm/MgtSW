@@ -1,4 +1,7 @@
-
+<?php 
+$CI = & get_instance();
+$CI->load->library('fuel_auth'); 
+?>
 <div class = "user_hader">Customer PO For Factory </div>
 <div class = "new_user"><a href = "<?php echo site_url('order_shipping_outs/add') ?>">Create A New Customer PO For Factory  </a></div>
 
@@ -31,17 +34,20 @@
 //    print_r($order_shipping_outs);
 //    echo '</pre>';
 //    die();
-    foreach ($order_shipping_outs as $key => $po_factory): ?>
+    foreach ($order_shipping_outs as $key => $order_shipping_out): ?>
 
 
-        <div class="name_text_here"><?php echo $po_factory['customer_name'] ?><a href="<?php echo site_url('order_shipping_outs/view/' . $po_factory['id']) ?>">View</a></div>
-        <div class="email_text_here"><?php echo $po_factory['quantity'] ?></div>
-        <div class="enabled"><?php echo $po_factory['notes'] ?></div>
-        <div class="enabled"><?php echo english_date_verbose($po_factory['updated_at']) ?></div>
-        <div class="enabled"><a class="update"href="<?php echo site_url('order_shipping_outs/edit/' . $po_factory['id']) ?>">Update</a> | <a class="remove" href="<?php echo site_url('order_shipping_outs/remove/' . $po_factory['id']) ?>">Remove</a></div>
-
-
-
+        <div class="name_text_here"><?php echo $order_shipping_out['customer_name'] ?><a href="<?php echo site_url('order_shipping_outs/view/' . $order_shipping_out['id']) ?>">View</a></div>
+        <div class="email_text_here"><?php echo $order_shipping_out['quantity'] ?></div>
+        <div class="enabled"><?php echo $order_shipping_out['notes'] ?></div>
+        <div class="enabled"><?php echo english_date_verbose($order_shipping_out['updated_at']) ?></div>
+        <div class="enabled">
+            <?php if ($CI->fuel_auth->has_permission('order_shipping_outs/edit')) { ?>
+                <a class="update"href="<?php echo site_url('order_shipping_outs/edit/' . $order_shipping_out['id']) ?>">Update</a> | 
+                <?php } if ($CI->fuel_auth->has_permission('order_shipping_outs/remove')) { ?>
+                <a class="remove" href="<?php echo site_url('order_shipping_outs/remove/' . $order_shipping_out['id']) ?>">Remove</a>
+            <?php } ?>
+        </div>
 
     <?php endforeach; ?>
 

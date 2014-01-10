@@ -1,3 +1,7 @@
+<?php 
+$CI = & get_instance();
+$CI->load->library('fuel_auth'); 
+?>
 <div class="user_hader">Customer Enquiry </div>
 <div class="new_user"><a href="<?php echo site_url('customer_enquiries/add') ?>">Create A New Customer Enquiry </a></div>
 
@@ -28,11 +32,17 @@
     <?php foreach ($customer_enquiries as $key => $customer_enquiry): ?>
 
 
-        <div class="name_text_here"><?php echo $customer_enquiry['ticket_number'] ?><a href="<?php echo site_url('customer_enquiries/view/'.$customer_enquiry['id']) ?>">View</a></div>
+        <div class="name_text_here"><?php echo $customer_enquiry['ticket_number'] ?><a href="<?php echo site_url('customer_enquiries/view/' . $customer_enquiry['id']) ?>">View</a></div>
         <div class="email_text_here"><?php echo $customer_enquiry['qty'] ?></div>
         <div class="enabled"><?php echo $customer_enquiry['notes'] ?></div>
         <div class="enabled"><?php echo english_date_verbose($customer_enquiry['updated_at']) ?></div>
-        <div class="enabled"><a class="update"href="<?php echo site_url('customer_enquiries/edit/'.$customer_enquiry['id']) ?>">Update</a> | <a class="remove" href="<?php echo site_url('customer_enquiries/remove/'.$customer_enquiry['id']) ?>">Remove</a></div>
+        <div class="enabled">
+            <?php if ($CI->fuel_auth->has_permission('customer_enquiries/edit')) { ?>
+                <a class="update"href="<?php echo site_url('customer_enquiries/edit/' . $customer_enquiry['id']) ?>">Update</a> | 
+            <?php } if ($CI->fuel_auth->has_permission('customer_enquiries/remove')) { ?>
+                <a class="remove" href="<?php echo site_url('customer_enquiries/remove/' . $customer_enquiry['id']) ?>">Remove</a>
+            <?php } ?>
+        </div>
 
 
 
