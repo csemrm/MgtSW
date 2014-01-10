@@ -25,14 +25,14 @@
     <div class="status">Last Updated</div>
     <div class="status">Action</div>
 
-    <?php foreach ($sample_shipping_outs as $key => $customer_enquiry): ?>
+    <?php foreach ($sample_shipping_outs as $key => $sample_shipping_out):// print_obj($sample_shipping_out) ?>
 
 
-        <div class="name_text_here"><?php echo $customer_enquiry['ticket_number'] ?><a href="<?php echo site_url('sample_shipping_outs/view/' . $customer_enquiry['id']) ?>">View</a></div>
-        <div class="email_text_here"><?php echo $customer_enquiry['qty'] ?></div>
-        <div class="enabled"><?php echo $customer_enquiry['notes'] ?></div>
-        <div class="enabled"><?php echo english_date_verbose($customer_enquiry['updated_at']) ?></div>
-        <div class="enabled"><a class="update"href="<?php echo site_url('sample_shipping_outs/edit/' . $customer_enquiry['id']) ?>">Update</a> | <a class="remove" href="<?php echo site_url('sample_shipping_outs/remove/' . $customer_enquiry['id']) ?>">Remove</a></div>
+        <div class="name_text_here"><?php echo $sample_shipping_out['created_by'] ?><a href="<?php echo site_url('sample_shipping_outs/view/' . $sample_shipping_out['id']) ?>">View</a></div>
+        <div class="email_text_here"><?php echo $sample_shipping_out['quantity'] ?></div>
+        <div class="enabled"><?php echo $sample_shipping_out['notes'] ?></div>
+        <div class="enabled"><?php echo english_date_verbose($sample_shipping_out['updated_at']) ?></div>
+        <div class="enabled"><a class="update"href="<?php echo site_url('sample_shipping_outs/edit/' . $sample_shipping_out['id']) ?>">Update</a> | <a class="remove" href="<?php echo site_url('sample_shipping_outs/remove/' . $sample_shipping_out['id']) ?>">Remove</a></div>
 
 
 

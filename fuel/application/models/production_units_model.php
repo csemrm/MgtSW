@@ -4,10 +4,27 @@ if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 require_once(FUEL_PATH . 'models/base_module_model.php');
 
-class sample_shipping_outs_model extends Base_module_model {
+class production_units_model extends Base_module_model {
+
+    public $required = array('name');
+    public $unique_fields = array('name');
 
     function __construct() {
-        parent::__construct('nrb_sample_shipping_outs');
+        parent::__construct('nrb_production_units');
+    }
+
+    function list_items($limit = NULL, $offset = NULL, $col = 'name', $order = 'asc') {
+
+        $this->db->select('id, name , is_active as Active ', FALSE);
+        $data = parent::list_items($limit, $offset, $col, $order);
+        foreach ($data as $key => $value) {
+
+            if ($value['Active'] == 1)
+                $data[$key]['Active'] = "Yes";
+            else if ($value['Active'] == 0)
+                $data[$key]['Active'] = "No";
+        }
+        return $data;
     }
 
     function form_fields($values = null) {
@@ -25,18 +42,16 @@ class sample_shipping_outs_model extends Base_module_model {
         $fields['is_active']['label'] = 'Active';
         $fields['is_active']['options'] = array('1' => $yes, '0' => $no);
 
+
+
         return $fields;
     }
 
     function on_before_clean($values) {
-        return $this->auto_fields($values);
-    }
-
-    protected function auto_fields($values) {
         $CI = & get_instance();
         $user = $CI->fuel_auth->user_data();
 
-        if (!empty($values['id'])) {
+        if ($values['id']) {
             $values['updated_at'] = datetime_now(true);
             $values['updated_by'] = $user['id'];
         } else {
@@ -48,28 +63,8 @@ class sample_shipping_outs_model extends Base_module_model {
         return $values;
     }
 
-    public function delete($where) {
-
-        return parent::delete($where);
-    }
-
-    public function insert($values) {
-
-        $values = $this->auto_fields($values);
-
-        return $record = parent::insert($values);
-
-//        die($record);
-//        
-    }
-
-    public function update($values, $where) {
-        $values = $this->auto_fields($values);
-        return parent::update($values, $where);
-    }
-
 }
 
-class sample_shipping_out_model extends Data_record {
+class production_unit_model extends Data_record {
     
 }

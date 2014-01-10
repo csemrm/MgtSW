@@ -37,22 +37,27 @@ class sample_shipping_outs extends Fuel_base_controller {
 
     function edit($id = null) {
 
-        $data = array();
+        $vars = array();
 
         $vars['assets_path'] = $this->config->item('assets_path');
-//        $vars['body'] = $this->form_process($id);
+        $vars['body'] = $this->form_process($id);
 
 
         $this->load->view('MGTSW/MGTSW', $vars);
     }
 
     function form_process($id = null) {
-        $this->load->model('Ncategories_model');
+        $this->load->model(array('Ncategories_model', 'production_units_model', 'local_companies_model'));
         $this->load->library('session');
         $this->load->library('saitex_form_builder');
         $this->load->helper('file');
 
-
+        $this->saitex_form_builder->load_custom_fields(APPPATH . 'config/custom_fields.php');
+        if (!empty($id)) {
+            $saved = $this->sample_shipping_outs_model->find_one_array(array('id' => $id));
+            if (empty($saved))
+                show_404();
+        }
 
         $this->session->set_flashdata('success', false);
         if (!empty($_POST)) {
@@ -65,7 +70,9 @@ class sample_shipping_outs extends Fuel_base_controller {
 
 
         $fields = array();
-        $fields['customer_name'] = array('required' => TRUE, 'label' => 'Customer Name', 'row_class' => 'create_a_customer');
+        $fields['local_company_id'] = array('required' => TRUE, 'label' => 'Local Company', 'row_class' => 'create_a_customer', 'value' => 'Local Company', 'type' => 'select',
+            'options' => $this->local_companies_model->options_list()
+        );
         $fields['category_id'] = array('required' => TRUE, 'label' => 'Category', 'row_class' => 'create_a_customer', 'value' => 'Selct Category', 'type' => 'select',
             'options' => $this->Ncategories_model->options_list()
         );
@@ -74,61 +81,60 @@ class sample_shipping_outs extends Fuel_base_controller {
         $fields['material_composition'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Material Composition', 'row_class' => 'create_a_customer');
         $fields['material_weight'] = array('required' => TRUE, 'label' => 'Material Weight', 'row_class' => 'create_a_customer');
         $fields['customization'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Customization', 'row_class' => 'create_a_customer');
-        $fields['messurment_chat'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Messurment Chat', 'row_class' => 'create_a_customer');
-        $fields['item_picture'] = array('required' => TRUE, 'type' => 'file', 'label' => 'Item Picture:(if available)', 'row_class' => 'create_a_customer');
-        $fields['technical_files'] = array('required' => TRUE, 'type' => 'file', 'label' => 'Technical Files:(if available)', 'row_class' => 'create_a_customer');
-        $fields['logo_files'] = array('required' => TRUE, 'type' => 'file', 'label' => 'Logo Files:(if available)', 'row_class' => 'create_a_customer');
+        $fields['item_picture'] = array('required' => false, 'type' => 'file', 'label' => 'Item Picture:(if available)', 'row_class' => 'create_a_customer');
         $fields['notes'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Notes', 'row_class' => 'create_a_customer');
-        $fields['price'] = array('required' => TRUE, 'label' => 'Price', 'row_class' => 'create_a_customer');
-        $fields['po_proforma_file'] = array('required' => TRUE, 'type' => 'file', 'label' => 'PO and Pro-form Attached Files ', 'row_class' => 'create_a_customer');
-        $fields['further_customer_file'] = array('required' => TRUE, 'type' => 'file', 'label' => 'Further Customer\'s Attached Files ', 'row_class' => 'create_a_customer');
-        $fields['link_production'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Link to the Production Monitoring System ', 'row_class' => 'create_a_customer');
-        $fields['lab_dip_delivery_term'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Lab-Dip Delivery Term', 'row_class' => 'create_a_customer');
-        $fields['pp_sample_delivery_term'] = array('label' => 'PP Sample Delivery Term ', 'type' => 'textarea', 'row_class' => 'create_a_customer', 'order' => 25);
-        $fields['tracking_number'] = array('required' => TRUE, 'label' => 'Customer Tracking no. & Courier & Pictures', 'type' => 'textarea', 'row_class' => 'create_a_customer');
-        $fields['office_update_parcel_receipt'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Office Update', 'row_class' => 'create_a_customer');
-        $fields['customer_update_parcel_receipt'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Customer\'s Details Update ', 'row_class' => 'create_a_customer');
-        $fields['shipping_agent'] = array('required' => TRUE, 'label' => 'Shipping Agent', 'type' => 'textarea', 'row_class' => 'create_a_customer', 'order' => 25);
-        $fields['payment_update_file'] = array('required' => TRUE, 'label' => 'Payment Update', 'type' => 'textarea', 'row_class' => 'create_a_customer', 'order' => 25);
-
+        $fields['customer_tracking_no_courier'] = array('required' => TRUE, 'label' => 'Customer Tracking no. & Courier & Pictures', 'type' => 'textarea', 'row_class' => 'create_a_customer');
+        if (!empty($id))
+            $fields['id'] = array('required' => TRUE, 'type' => 'hidden');
         $this->saitex_form_builder->set_fields($fields);
         $this->saitex_form_builder->css_class = 'search_box';
         // will set the values of the fields if there is an error... must be after set_fields
         $this->saitex_form_builder->set_validator($this->validator);
-        $this->saitex_form_builder->set_field_values($_POST);
+        if (!empty($_POST)) {
+            $val = $_POST;
+        } else
+        if (!empty($id)) {
+            $val = $saved;
+        } else {
+            $val = array();
+        }
+        
+        $this->saitex_form_builder->set_field_values($val);
         $this->saitex_form_builder->display_errors = TRUE;
         $this->saitex_form_builder->form_attrs = 'method="post"';
         $this->saitex_form_builder->show_required = true;
-        $this->saitex_form_builder->submit_value = 'Create Sample Shipping Out';
+        $this->saitex_form_builder->submit_value = 'Create Sample Request';
         $this->saitex_form_builder->submit_name = 'submit';
-        $vars['form'] = $this->saitex_form_builder->render($fields, 'divs');
+        $vars['form'] = $this->saitex_form_builder->render(null, 'divs');
 
         return $this->load->view('MGTSW/sample_shipping_outs/form', $vars, TRUE);
     }
 
     function _process($data) {
         $assets_path = $this->config->item('assets_path');
-        $config['upload_path'] = './' . $assets_path . 'uploads/';
+        $config['upload_path'] = './' . $assets_path . 'uploads/sample_shipping_outs/';
         $config['allowed_types'] = 'gif|jpg|png|pdf';
         $config['max_size'] = '2048';
         $config['max_width'] = '1024';
         $config['max_height'] = '768';
         $config['encrypt_name'] = TRUE;
-        print_r($config);
+ 
         $this->load->library('upload', $config);
         $this->load->library('validator');
 
         if ($this->validator->validate()) {
             unset($data['submit']);
             foreach ($_FILES as $key => $value) {
-                if (!$this->upload->do_upload($key)) {
-                    $error = array('error' => $this->upload->display_errors());
-                    print_r($error);
-                    die();
-                    return FALSE;
-                } else {
-                    $upload_data = $this->upload->data();
-                    $data[$key] = $upload_data['file_name'];
+                if ($value['name']) {
+                    if (!$this->upload->do_upload($key)) {
+                        $error = array('error' => $this->upload->display_errors());
+                        print_r($error);
+                        die();
+                        return FALSE;
+                    } else {
+                        $upload_data = $this->upload->data();
+                        $data[$key] = $upload_data['file_name'];
+                    }
                 }
             }
             if (empty($data['id']))
@@ -150,11 +156,11 @@ class sample_shipping_outs extends Fuel_base_controller {
         }
         $where = array();
         $where['id'] = $id;
-        $customer_order = $this->sample_shipping_outs_model->find_one_array($where);
-        if (empty($customer_order['id'])) {
+        $sample_shipping_out = $this->sample_shipping_outs_model->find_one_array($where);
+        if (empty($sample_shipping_out['id'])) {
             show_404();
         }
-        $data['customer_order'] = $customer_order;
+        $data['sample_shipping_out'] = $sample_shipping_out;
         $vars['assets_path'] = $this->config->item('assets_path');
         $vars['body'] = $this->load->view('MGTSW/sample_shipping_outs/view', $data, true);
 

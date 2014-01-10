@@ -47,7 +47,7 @@ class sample_requests extends Fuel_base_controller {
     }
 
     function form_process($id = null) {
-        $this->load->model('Ncategories_model');
+        $this->load->model(array('Ncategories_model', 'production_units_model', 'local_companies_model'));
         $this->load->library('session');
         $this->load->library('saitex_form_builder');
         $this->load->helper('file');
@@ -55,7 +55,7 @@ class sample_requests extends Fuel_base_controller {
 
         $this->saitex_form_builder->load_custom_fields(APPPATH . 'config/custom_fields.php');
         if (!empty($id)) {
-            $saved = $this->quotations_model->find_one_array(array('id' => $id));
+            $saved = $this->sample_requests_model->find_one_array(array('id' => $id));
             if (empty($saved))
                 show_404();
         }
@@ -71,31 +71,30 @@ class sample_requests extends Fuel_base_controller {
 
 
         $fields = array();
-        $fields['customer_name'] = array('required' => TRUE, 'label' => 'Customer Name', 'row_class' => 'create_a_customer');
+        $fields['unit_id'] = array('required' => TRUE, 'label' => 'Production Unit Id', 'row_class' => 'create_a_customer', 'value' => 'Selct Unit', 'type' => 'select',
+            'options' => $this->production_units_model->options_list()
+        );
         $fields['category_id'] = array('required' => TRUE, 'label' => 'Category', 'row_class' => 'create_a_customer', 'value' => 'Selct Category', 'type' => 'select',
             'options' => $this->Ncategories_model->options_list()
         );
+        $fields['local_company_id'] = array('required' => TRUE, 'label' => 'Local Company', 'row_class' => 'create_a_customer', 'value' => 'Local Company', 'type' => 'select',
+            'options' => $this->local_companies_model->options_list()
+        );
+
         $fields['item_description'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Item Description', 'row_class' => 'create_a_customer');
         $fields['quantity'] = array('required' => TRUE, 'label' => 'Quantity', 'row_class' => 'create_a_customer');
         $fields['material_composition'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Material Composition', 'row_class' => 'create_a_customer');
         $fields['material_weight'] = array('required' => TRUE, 'label' => 'Material Weight', 'row_class' => 'create_a_customer');
         $fields['customization'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Customization', 'row_class' => 'create_a_customer');
-        $fields['messurment_chat'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Messurment Chat', 'row_class' => 'create_a_customer');
-        $fields['item_picture'] = array('required' => TRUE, 'type' => 'file', 'label' => 'Item Picture:(if available)', 'row_class' => 'create_a_customer');
-        $fields['technical_files'] = array('required' => TRUE, 'type' => 'file', 'label' => 'Technical Files:(if available)', 'row_class' => 'create_a_customer');
-        $fields['logo_files'] = array('required' => TRUE, 'type' => 'file', 'label' => 'Logo Files:(if available)', 'row_class' => 'create_a_customer');
+        $fields['item_picture'] = array('required' => false, 'type' => 'file', 'label' => 'Item Picture:(if available)', 'row_class' => 'create_a_customer');
+        $fields['technical_files'] = array('required' => false, 'type' => 'file', 'label' => 'Technical Files:(if available)', 'row_class' => 'create_a_customer');
+        $fields['logo_files'] = array('required' => false, 'type' => 'file', 'label' => 'Logo Files:(if available)', 'row_class' => 'create_a_customer');
+        $fields['assigne_to'] = array('required' => TRUE, 'label' => 'Assign Merchandiser', 'row_class' => 'create_a_customer');
+        $fields['latest_shipout_date'] = array('required' => TRUE, 'type' => 'date', 'label' => 'Latest Shipout Date', 'row_class' => 'create_a_customer');
         $fields['notes'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Notes', 'row_class' => 'create_a_customer');
-        $fields['price'] = array('required' => TRUE, 'label' => 'Price', 'row_class' => 'create_a_customer');
-        $fields['po_proforma_file'] = array('required' => TRUE, 'type' => 'file', 'label' => 'PO and Pro-form Attached Files ', 'row_class' => 'create_a_customer');
-        $fields['further_customer_file'] = array('required' => TRUE, 'type' => 'file', 'label' => 'Further Customer\'s Attached Files ', 'row_class' => 'create_a_customer');
-        $fields['link_production'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Link to the Production Monitoring System ', 'row_class' => 'create_a_customer');
-        $fields['lab_dip_delivery_term'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Lab-Dip Delivery Term', 'row_class' => 'create_a_customer');
-        $fields['pp_sample_delivery_term'] = array('label' => 'PP Sample Delivery Term ', 'type' => 'textarea', 'row_class' => 'create_a_customer', 'order' => 25);
-        $fields['tracking_number'] = array('required' => TRUE, 'label' => 'Customer Tracking no. & Courier & Pictures', 'type' => 'textarea', 'row_class' => 'create_a_customer');
-        $fields['office_update_parcel_receipt'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Office Update', 'row_class' => 'create_a_customer');
-        $fields['customer_update_parcel_receipt'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Customer\'s Details Update ', 'row_class' => 'create_a_customer');
-        $fields['shipping_agent'] = array('required' => TRUE, 'label' => 'Shipping Agent', 'type' => 'textarea', 'row_class' => 'create_a_customer', 'order' => 25);
-        $fields['payment_update_file'] = array('required' => TRUE, 'label' => 'Payment Update', 'type' => 'textarea', 'row_class' => 'create_a_customer', 'order' => 25);
+        $fields['sample_delivery_term'] = array('label' => 'Sample Delivery Term ', 'type' => 'textarea', 'row_class' => 'create_a_customer', 'order' => 25);
+        $fields['customer_tracking_no_courier'] = array('required' => TRUE, 'label' => 'Customer Tracking no. & Courier & Pictures', 'type' => 'textarea', 'row_class' => 'create_a_customer');
+        $fields['original_samples'] = array('required' => TRUE, 'type' => 'textarea', 'label' => 'Original Samples', 'row_class' => 'create_a_customer');
         if (!empty($id))
             $fields['id'] = array('required' => TRUE, 'type' => 'hidden');
         $this->saitex_form_builder->set_fields($fields);
@@ -129,21 +128,23 @@ class sample_requests extends Fuel_base_controller {
         $config['max_width'] = '1024';
         $config['max_height'] = '768';
         $config['encrypt_name'] = TRUE;
-        print_r($config);
+//        print_r($config);
         $this->load->library('upload', $config);
         $this->load->library('validator');
 
         if ($this->validator->validate()) {
             unset($data['submit']);
             foreach ($_FILES as $key => $value) {
-                if (!$this->upload->do_upload($key)) {
-                    $error = array('error' => $this->upload->display_errors());
-                    print_r($error);
-                    die();
-                    return FALSE;
-                } else {
-                    $upload_data = $this->upload->data();
-                    $data[$key] = $upload_data['file_name'];
+                if (!empty($value['name'])) {
+                    if (!$this->upload->do_upload($key)) {
+                        $error = array('error' => $this->upload->display_errors());
+                        print_r($error);
+                        die();
+                        return FALSE;
+                    } else {
+                        $upload_data = $this->upload->data();
+                        $data[$key] = $upload_data['file_name'];
+                    }
                 }
             }
             if (empty($data['id']))
@@ -165,11 +166,11 @@ class sample_requests extends Fuel_base_controller {
         }
         $where = array();
         $where['id'] = $id;
-        $customer_order = $this->sample_requests_model->find_one_array($where);
-        if (empty($customer_order['id'])) {
+        $sample_requests = $this->sample_requests_model->find_one_array($where);
+        if (empty($sample_requests['id'])) {
             show_404();
         }
-        $data['customer_order'] = $customer_order;
+        $data['sample_requests'] = $sample_requests;
         $vars['assets_path'] = $this->config->item('assets_path');
         $vars['body'] = $this->load->view('MGTSW/sample_requests/view', $data, true);
 
@@ -184,8 +185,8 @@ class sample_requests extends Fuel_base_controller {
         }
         $where = array();
         $where['id'] = $id;
-        $customer_order = $this->sample_requests_model->find_one($where);
-        if (empty($customer_order->id)) {
+        $sample_requests = $this->sample_requests_model->find_one($where);
+        if (empty($sample_requests->id)) {
             show_404();
         }
         if (!$this->fuel->auth->has_permission('sample_requests_delete')) {

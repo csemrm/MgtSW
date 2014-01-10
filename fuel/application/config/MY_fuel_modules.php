@@ -34,34 +34,40 @@ $config['modules']['Ncategories'] = array(
     'display_field' => 'name',
     'module_name' => 'Categories',
 );
+
+$config['modules']['production_units'] = array(
+    'display_field' => 'name',
+    'module_name' => 'Production Units',
+);
+
 $config['modules']['local_companies'] = array(
     'display_field' => 'name',
     'module_name' => 'Companies',
 );
-$config['modules']['customer_orders'] = array( 
+$config['modules']['customer_orders'] = array(
     'module_name' => 'Customer orders',
 );
-$config['modules']['order_shipping_outs'] = array( 
+$config['modules']['order_shipping_outs'] = array(
     'module_name' => 'Shipping Outs',
 );
 
-$config['modules']['po_factories'] = array( 
+$config['modules']['po_factories'] = array(
     'module_name' => 'PO Factories',
 );
 
-$config['modules']['process_descriptions'] = array( 
+$config['modules']['process_descriptions'] = array(
     'module_name' => 'Process Descriptions',
 );
 
-$config['modules']['quotations'] = array( 
+$config['modules']['quotations'] = array(
     'module_name' => 'Quotations',
 );
 
-$config['modules']['sample_requests'] = array( 
+$config['modules']['sample_requests'] = array(
     'module_name' => 'Sample Requests',
 );
 
-$config['modules']['sample_shipping_outs'] = array( 
+$config['modules']['sample_shipping_outs'] = array(
     'module_name' => 'Sample Shipping Outs',
 );
 

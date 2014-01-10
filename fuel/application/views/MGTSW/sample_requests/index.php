@@ -19,17 +19,17 @@
 
 <div class="right_body_conten">
 
-    <div class="name_text">Ticket Number</div>
+    <div class="name_text">Customer Name</div>
     <div class="email_here">Quantity</div>
-    <div class="status">Status</div>
+    <div class="status">Notes</div>
     <div class="status">Last Updated</div>
     <div class="status">Action</div>
 
     <?php foreach ($sample_requests as $key => $sample_request): ?>
 
 
-        <div class="name_text_here"><?php echo $sample_request['ticket_number'] ?><a href="<?php echo site_url('sample_requests/view/' . $sample_request['id']) ?>">View</a></div>
-        <div class="email_text_here"><?php echo $sample_request['qty'] ?></div>
+        <div class="name_text_here"><?php echo $sample_request['created_by'] ?><a href="<?php echo site_url('sample_requests/view/' . $sample_request['id']) ?>">View</a></div>
+        <div class="email_text_here"><?php echo $sample_request['quantity'] ?></div>
         <div class="enabled"><?php echo $sample_request['notes'] ?></div>
         <div class="enabled"><?php echo english_date_verbose($sample_request['updated_at']) ?></div>
         <div class="enabled"><a class="update"href="<?php echo site_url('sample_requests/edit/' . $sample_request['id']) ?>">Update</a> | <a class="remove" href="<?php echo site_url('sample_requests/remove/' . $sample_request['id']) ?>">Remove</a></div>
